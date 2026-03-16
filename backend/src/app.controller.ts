@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Param, Redirect, Body } from '@nestjs/common';
+import { Controller, Get, Post, Param, Redirect, Body,BadRequestException } from '@nestjs/common';
 import { AppService } from './app.service';
 import { UrlService } from './url.service';
 import { Url } from './generated/prisma/client';
@@ -29,7 +29,7 @@ export class AppController {
   ) : Promise<Url> {
     const {url} = urlData
     if (!this.appService.isValidUrl(url)) {
-      throw new Error("Invalid URL");
+      throw new BadRequestException("Invalid URL");
     }
     const existingUrl = await this.urlService.url({ url });
     if (existingUrl) {
