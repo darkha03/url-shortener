@@ -28,6 +28,13 @@ export class AppController {
     @Body() urlData:{ url: string}
   ) : Promise<Url> {
     const {url} = urlData
+    if (!this.appService.isValidUrl(url)) {
+      throw new Error("Invalid URL");
+    }
+    const existingUrl = await this.urlService.url({ url });
+    if (existingUrl) {
+      return existingUrl;
+    }
     this.count++;
     const shortenUrl = this.appService.encodeUrl(this.count);
     return this.urlService.createUrl({

@@ -2,9 +2,6 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class AppService {
-  getHello(): string {
-    return 'Hello World!';
-  }
 
   private alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   private base = this.alphabet.length;
@@ -26,5 +23,14 @@ export class AppService {
       id = id * this.base + index;
     }
     return id;
+  }
+
+  isValidUrl(url: string): boolean {
+    try {
+      new URL(url);
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 }
