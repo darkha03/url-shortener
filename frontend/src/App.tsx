@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import './App.css'
 
 function App() {
@@ -6,6 +6,7 @@ function App() {
   const [shortenUrl, setShortenUrl] = useState("");
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
+
 
   const API_URL = "http://localhost:3000";
 
@@ -36,9 +37,11 @@ function App() {
       setError("Failed to shorten URL. Please try again.");
       setMessage("");
       setShortenUrl("");
-    })
+    });
+    fetchUrls();
+  }
 
-    async function fetchUrls() {
+  async function fetchUrls() {
       await fetch(`${API_URL}`)
         .then(res => res.json())
         .then(data => {
@@ -61,8 +64,9 @@ function App() {
         });
     }
 
+  useEffect(() => {
     fetchUrls();
-  }
+  }, []);
 
   return (
     <>
