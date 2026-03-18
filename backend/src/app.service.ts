@@ -25,22 +25,20 @@ export class AppService {
     return id;
   }
 
-  async isExistingUrl(url: string): Promise<boolean> {
+  async isExistingUrl(url: string): Promise<{urlExist : boolean; finalUrl: string}> {
     try {
       const response = await fetch(url, { method: 'HEAD', redirect: 'follow' });
-      return response.ok;
+      const finalUrl = response.url || url;
+      return {urlExist: response.ok, finalUrl};
     } catch (error) {
       console.error(`Error checking URL existence: ${error}`);
-      return false;
+      return {urlExist :false, finalUrl: url}; 
     }
   }
 
   normalizeUrl(url: string): string {
     if (!/^https?:\/\//i.test(url)) {
       url = 'http://' + url;
-    }
-    if (url.endsWith('/')) {
-      url = url.slice(0, -1);
     }
     return url;
   }

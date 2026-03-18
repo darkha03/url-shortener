@@ -30,17 +30,19 @@ export class AppController {
     const {url} = urlData;
 
     const normalizedUrl = this.appService.normalizeUrl(url);
-
+    
+    let finalUrl: string;
     try {
-      const urlExists = await this.appService.isExistingUrl(normalizedUrl);
-      if (!urlExists) {
+      const result = await this.appService.isExistingUrl(normalizedUrl);
+      finalUrl = result.finalUrl;
+      if (!result.urlExist) {
         throw new BadRequestException('URL does not exist or is unreachable.');
       }
     } catch (error) {
       throw new BadRequestException(error);
     }
 
-    const existingUrl = await this.urlService.url({ url: normalizedUrl });
+    const existingUrl = await this.urlService.url({ url: finalUrl });
     if (existingUrl) {
       return existingUrl;
     }
