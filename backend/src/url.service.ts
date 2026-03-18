@@ -32,4 +32,16 @@ export class UrlService {
             data: { count: { increment: 1 } },
         });
     }
+
+    async deleteExpiredUrls(): Promise<void> {
+        const thirtyDaysAgo = new Date();
+        thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+        await this.prisma.url.deleteMany({
+            where: {
+                last_update: {
+                    lt: thirtyDaysAgo,
+                },
+            },
+        });
+    } 
 }

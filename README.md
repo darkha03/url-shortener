@@ -32,5 +32,4 @@ docker compose up --build
 ## Points à améliorer
 - Ajouter une gestion d'erreurs plus riche côté API et UI.
 - Ajouter des tests unitaires et d'intégration
-- Ajouter un cronjob pour supprimer les URLs expirés
 - Mise en place d'un reverse proxy Nginx pour la protection des routes
