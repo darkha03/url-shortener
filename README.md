@@ -30,10 +30,7 @@ docker compose up --build
 
 
 ## Points à améliorer
-- Incrémenter `count` lors des redirections pour suivre l'usage.
 - Ajouter une gestion d'erreurs plus riche côté API et UI.
 - Ajouter des tests unitaires et d'intégration
-- Ajouter des validations et la normalisation d'URL
 - Ajouter un cronjob pour supprimer les URLs expirés
-- Améliorer UI avec la bibliothèque Tailwind
 - Mise en place d'un reverse proxy Nginx pour la protection des routes

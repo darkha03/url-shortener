@@ -27,18 +27,29 @@ export class AppController {
   async createUrl(
     @Body() urlData:{ url: string}
   ) : Promise<Url> {
-    const {url} = urlData
-    if (!this.appService.isValidUrl(url)) {
-      throw new BadRequestException("Invalid URL");
+    const {url} = urlData;
+
+    const normalizedUrl = this.appService.normalizeUrl(url);
+
+    try {
+      const urlExists = await this.appService.isExistingUrl(normalizedUrl);
+      if (!urlExists) {
+        throw new BadRequestException('URL does not exist or is unreachable.');
+      }
+    } catch (error) {
+      throw new BadRequestException(error);
     }
-    const existingUrl = await this.urlService.url({ url });
+
+    const existingUrl = await this.urlService.url({ url: normalizedUrl });
     if (existingUrl) {
       return existingUrl;
     }
+
     this.count++;
+
     const shortenUrl = this.appService.encodeUrl(this.count);
     return this.urlService.createUrl({
-      url : url,
+      url : normalizedUrl,
       shorten_url: shortenUrl,
       count : 0
     })
@@ -50,6 +61,7 @@ export class AppController {
     const id = this.appService.decodeUrl(shortUrl);
     const url = await this.urlService.url({ id });
     if (url) {
+      await this.urlService.incrementCount(id);
       return { url: url.url };
     } else {
       return { url: "/" };

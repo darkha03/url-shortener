@@ -25,4 +25,11 @@ export class UrlService {
     async count(): Promise<number> {
         return this.prisma.url.count();
     }
+
+    async incrementCount(id: number): Promise<Url> {
+        return this.prisma.url.update({
+            where: { id },
+            data: { count: { increment: 1 } },
+        });
+    }
 }

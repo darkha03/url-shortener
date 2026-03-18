@@ -25,12 +25,23 @@ export class AppService {
     return id;
   }
 
-  isValidUrl(url: string): boolean {
+  async isExistingUrl(url: string): Promise<boolean> {
     try {
-      new URL(url);
-      return true;
-    } catch (e) {
+      const response = await fetch(url, { method: 'HEAD', redirect: 'follow' });
+      return response.ok;
+    } catch (error) {
+      console.error(`Error checking URL existence: ${error}`);
       return false;
     }
+  }
+
+  normalizeUrl(url: string): string {
+    if (!/^https?:\/\//i.test(url)) {
+      url = 'http://' + url;
+    }
+    if (url.endsWith('/')) {
+      url = url.slice(0, -1);
+    }
+    return url;
   }
 }
